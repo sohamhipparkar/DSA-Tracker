@@ -16,6 +16,7 @@
     "@fontsource/inter": "^5.2.8",
     "axios": "^1.13.5",
     "lucide-react": "^0.563.0",
+    "processenv": "^3.0.9",
     "react": "^19.2.0",
     "react-circular-progressbar": "^2.2.0",
     "react-dom": "^19.2.0",
