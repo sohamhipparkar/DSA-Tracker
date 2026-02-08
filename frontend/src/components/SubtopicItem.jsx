@@ -17,12 +17,10 @@ export default function SubtopicItem({ sub, topicId, search }) {
 
   const titleRef = useRef(null);
 
-  // search filter
   const filtered = sub.questions.filter((q) =>
     q.title.toLowerCase().includes(search.toLowerCase())
   );
 
-  // progress
   const total = sub.questions.length;
   const done = sub.questions.filter((q) => completed.includes(q.id)).length;
   const percent = total === 0 ? 0 : Math.round((done / total) * 100);
@@ -54,7 +52,6 @@ export default function SubtopicItem({ sub, topicId, search }) {
   return (
     <div className="pl-4 border-l-2 border-slate-200 dark:border-slate-700 mb-6">
 
-      {/* HEADER */}
       <div className="flex items-center justify-between">
         <button
           onClick={() => setOpen(!open)}
@@ -66,7 +63,6 @@ export default function SubtopicItem({ sub, topicId, search }) {
             {sub.title}
           </h3>
 
-          {/* progress badge */}
           <span
             className={`text-xs px-2 py-1 rounded-full
             ${
@@ -79,7 +75,6 @@ export default function SubtopicItem({ sub, topicId, search }) {
           </span>
         </button>
 
-        {/* DELETE SUBTOPIC — ADMIN ONLY */}
         {isAdmin && (
           <button
             onClick={handleDelete}
@@ -96,11 +91,9 @@ export default function SubtopicItem({ sub, topicId, search }) {
         )}
       </div>
 
-      {/* CONTENT */}
       {open && (
         <div className="mt-3">
 
-          {/* ADD QUESTION BUTTON — ADMIN ONLY */}
           {isAdmin && !adding && (
             <button
               onClick={() => {
@@ -114,7 +107,6 @@ export default function SubtopicItem({ sub, topicId, search }) {
             </button>
           )}
 
-          {/* ADD QUESTION PANEL — ADMIN ONLY */}
           {isAdmin && adding && (
             <div className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-3 mb-4 space-y-2">
 
@@ -159,7 +151,6 @@ export default function SubtopicItem({ sub, topicId, search }) {
             </div>
           )}
 
-          {/* EMPTY STATE */}
           {filtered.length === 0 && (
             <p className="text-sm text-slate-500 dark:text-slate-400 italic">
               {isAdmin
@@ -168,7 +159,6 @@ export default function SubtopicItem({ sub, topicId, search }) {
             </p>
           )}
 
-          {/* QUESTIONS */}
           <div className="space-y-2">
             {filtered.map((q) => (
               <QuestionItem

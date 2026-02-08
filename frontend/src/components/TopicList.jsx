@@ -9,7 +9,6 @@ export default function TopicList({ search }) {
   const completed = useSheetStore((s) => s.completed);
   const reorderTopics = useSheetStore((s) => s.reorderTopics);
 
-  // ===== DRAG HANDLER =====
   const handleDragEnd = (event) => {
     const { active, over } = event;
     if (!over || active.id === over.id) return;
@@ -20,7 +19,6 @@ export default function TopicList({ search }) {
     reorderTopics(oldIndex, newIndex);
   };
 
-  // ===== OVERALL PROGRESS =====
   const { total, done, percent } = useMemo(() => {
     if (!Array.isArray(topics)) return { total: 0, done: 0, percent: 0 };
 
@@ -44,7 +42,6 @@ export default function TopicList({ search }) {
     return { total, done, percent };
   }, [topics, completed]);
 
-  // ===== CONTINUE WHERE LEFT OFF =====
   const nextQuestion = useMemo(() => {
     if (!Array.isArray(topics)) return null;
 
@@ -62,7 +59,6 @@ export default function TopicList({ search }) {
     return null;
   }, [topics, completed]);
 
-  // ===== FILTERED TOPICS =====
   const filteredTopics = Array.isArray(topics)
     ? topics.filter((topic) =>
         topic?.title?.toLowerCase().includes(search.toLowerCase())
@@ -72,7 +68,6 @@ export default function TopicList({ search }) {
   return (
     <div className="space-y-6">
 
-      {/* GLOBAL PROGRESS SUMMARY */}
       {total > 0 && (
         <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-5 shadow-sm">
           <div className="flex justify-between items-center mb-3">
@@ -85,7 +80,6 @@ export default function TopicList({ search }) {
             </span>
           </div>
 
-          {/* progress bar */}
           <div className="w-full h-3 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
             <div
               className={`h-3 rounded-full transition-all duration-700
@@ -110,7 +104,6 @@ export default function TopicList({ search }) {
         </div>
       )}
 
-      {/* CONTINUE BUTTON */}
       {nextQuestion && (
         <div className="bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-800 rounded-2xl p-4 flex items-center justify-between">
           <div>
@@ -133,7 +126,6 @@ export default function TopicList({ search }) {
         </div>
       )}
 
-      {/* TOPIC LIST */}
       <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
         <SortableContext
           items={filteredTopics.map((t) => t.id)}
@@ -141,13 +133,12 @@ export default function TopicList({ search }) {
         >
           <div className="space-y-5">
 
-            {/* NORMAL LIST */}
             {filteredTopics.length > 0 ? (
               filteredTopics.map((topic) => (
                 <TopicItem key={topic.id} topic={topic} search={search} />
               ))
             ) : topics.length === 0 ? (
-              /* EMPTY STATE */
+
               <div className="text-center py-16 bg-slate-50 dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700">
                 <div className="mb-4">
                   <span className="text-5xl">📚</span>
@@ -160,7 +151,7 @@ export default function TopicList({ search }) {
                 </p>
               </div>
             ) : (
-              /* SEARCH EMPTY */
+
               <div className="text-center py-16 bg-slate-50 dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700">
                 <div className="mb-4">
                   <span className="text-4xl">🔍</span>

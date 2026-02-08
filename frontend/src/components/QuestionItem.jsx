@@ -31,10 +31,9 @@ export default function QuestionItem({ q, topicId, subId }) {
           : "bg-slate-50 border-slate-200 hover:bg-slate-100 dark:bg-slate-800 dark:border-slate-700 dark:hover:bg-slate-700"
       }`}
     >
-      {/* LEFT SIDE */}
+
       <div className="flex items-center gap-3">
-        
-        {/* Checkbox */}
+
         
         <button
           onClick={() => toggleComplete(q.id)}
@@ -48,7 +47,6 @@ export default function QuestionItem({ q, topicId, subId }) {
           )}
         </button>
 
-        {/* Question Link */}
         <a
           href={q.link}
           target="_blank"
@@ -65,7 +63,6 @@ export default function QuestionItem({ q, topicId, subId }) {
         </a>
       </div>
 
-      {/* DELETE BUTTON */}
       {isAdmin && (
         <button
         onClick={handleDelete}

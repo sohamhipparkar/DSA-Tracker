@@ -8,7 +8,6 @@ body {
   font-family: Inter, system-ui, -apple-system, sans-serif;
 }
 
-/* Scrollbar */
 ::-webkit-scrollbar {
   width: 7px;
 }

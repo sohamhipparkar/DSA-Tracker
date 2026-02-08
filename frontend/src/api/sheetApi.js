@@ -5,14 +5,10 @@ const API = axios.create({
   timeout: 10000,
 });
 
-/* -------- READ -------- */
 export const getSheet = () => API.get("/sheet");
 
-/* -------- CREATE -------- */
 export const createTopic = (topic) => API.post("/topic", topic);
 
-/* -------- DELETE -------- */
 export const deleteTopicAPI = (id) => API.delete(`/topic/${id}`);
 
-/* -------- UPDATE -------- */
 export const updateTopic = (id, topic) => API.put(`/topic/${id}`, topic);

@@ -1,7 +1,6 @@
 import { create } from "zustand";
 import { v4 as uuid } from "uuid";
 
-/* ---------- LOCAL STORAGE LOADERS ---------- */
 
 const loadTopics = () => {
   try {
@@ -21,11 +20,9 @@ const loadCompleted = () => {
   }
 };
 
-/* ⭐ ADMIN MODE DEFAULT ON (FIRST VISIT) */
 const loadAdmin = () => {
   const saved = localStorage.getItem("adminMode");
 
-  // First visit → automatically enable admin
   if (saved === null) {
     localStorage.setItem("adminMode", "true");
     return true;
@@ -34,16 +31,12 @@ const loadAdmin = () => {
   return saved === "true";
 };
 
-/* ---------- STORE ---------- */
-
 export const useSheetStore = create((set, get) => ({
-  /* ===== STATE ===== */
 
   topics: loadTopics(),
   completed: loadCompleted(),
   isAdmin: loadAdmin(),
 
-  /* ===== ADMIN MODE ===== */
 
   toggleAdminMode: () =>
     set((state) => {
@@ -52,14 +45,12 @@ export const useSheetStore = create((set, get) => ({
       return { isAdmin: newMode };
     }),
 
-  /* ===== HYDRATE FROM API ===== */
 
   setTopicsFromAPI: (topicsData) => {
     localStorage.setItem("sheet", JSON.stringify(topicsData));
     set({ topics: topicsData });
   },
 
-  /* ===== PROGRESS CHECKBOX ===== */
 
   toggleComplete: (qId) =>
     set((state) => {
@@ -75,7 +66,6 @@ export const useSheetStore = create((set, get) => ({
       return { completed: updated };
     }),
 
-  /* ===== TOPIC ===== */
 
   addTopic: (title) =>
     set((state) => {
@@ -99,7 +89,6 @@ export const useSheetStore = create((set, get) => ({
       return { topics: updated };
     }),
 
-  /* ===== REORDER ===== */
 
   reorderTopics: (oldIndex, newIndex) =>
     set((state) => {
@@ -111,7 +100,6 @@ export const useSheetStore = create((set, get) => ({
       return { topics: updated };
     }),
 
-  /* ===== SUBTOPIC ===== */
 
   addSubtopic: (topicId, title) =>
     set((state) => {
@@ -146,7 +134,6 @@ export const useSheetStore = create((set, get) => ({
       return { topics: updated };
     }),
 
-  /* ===== QUESTIONS ===== */
 
   addQuestion: (topicId, subId, title, link) =>
     set((state) => {

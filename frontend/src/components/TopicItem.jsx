@@ -23,7 +23,6 @@ export default function TopicItem({ topic, search }) {
 
   const inputRef = useRef(null);
 
-  // drag & drop
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id: topic.id });
 
@@ -32,7 +31,6 @@ export default function TopicItem({ topic, search }) {
     transition,
   };
 
-  // ===== PROGRESS =====
   const { total, done, percent } = useMemo(() => {
     let total = 0;
     let done = 0;
@@ -72,11 +70,10 @@ export default function TopicItem({ topic, search }) {
       {...attributes}
       className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-5 shadow-sm hover:shadow-md transition"
     >
-      {/* HEADER */}
+
       <div className="flex justify-between items-center">
         <div className="flex items-center gap-4">
 
-          {/* drag handle */}
           {isAdmin && (
   <div {...listeners}
 
@@ -87,7 +84,6 @@ export default function TopicItem({ topic, search }) {
           </div>
 )}
 
-          {/* progress ring */}
           <div className="relative w-12 h-12 flex-shrink-0">
             <CircularProgressbar
               value={percent}
@@ -111,7 +107,6 @@ export default function TopicItem({ topic, search }) {
             />
           </div>
 
-          {/* title */}
           <button onClick={() => setOpen(!open)} className="text-left">
             <h2 className="text-lg font-bold text-slate-800 dark:text-slate-100">
               {topic.title}
@@ -123,7 +118,6 @@ export default function TopicItem({ topic, search }) {
           </button>
         </div>
 
-        {/* delete topic */}
         {isAdmin && (
           <button
             onClick={handleDelete}
@@ -141,11 +135,9 @@ export default function TopicItem({ topic, search }) {
 
       </div>
 
-      {/* BODY */}
       {open && (
         <div className="mt-5">
 
-          {/* ADD SUBTOPIC BUTTON */}
           {isAdmin && !adding && (
             <button
               onClick={() => {
@@ -159,7 +151,6 @@ export default function TopicItem({ topic, search }) {
             </button>
           )}
 
-          {/* ADD SUBTOPIC INPUT */}
           {adding && (
             <div className="flex gap-2 mb-5">
               <input
@@ -193,7 +184,6 @@ export default function TopicItem({ topic, search }) {
             </div>
           )}
 
-          {/* SUBTOPICS */}
           <div className="space-y-4">
             {topic.subtopics.length === 0 && (
               <p className="text-sm text-slate-500 dark:text-slate-400 italic">

@@ -6,7 +6,6 @@ require("dotenv").config();
 
 const app = express();
 
-// CORS Configuration - Allow multiple origins
 const allowedOrigins = [
   "http://localhost:5173",
   "https://dsa-tracker-nu-eight.vercel.app",
@@ -15,7 +14,6 @@ const allowedOrigins = [
 
 const corsOptions = {
   origin: function (origin, callback) {
-    // Allow requests with no origin (like mobile apps, Postman, or curl)
     if (!origin) return callback(null, true);
 
     if (allowedOrigins.includes(origin)) {
@@ -34,7 +32,6 @@ app.use(express.json());
 const FILE = "./data.json";
 const PORT = process.env.PORT || 5000;
 
-/* ---------- safe read ---------- */
 const readData = () => {
   try {
     if (!fs.existsSync(FILE)) {
@@ -53,12 +50,9 @@ const readData = () => {
   }
 };
 
-/* ---------- safe write ---------- */
 const writeData = (data) => {
   fs.writeFileSync(FILE, JSON.stringify(data, null, 2));
 };
-
-/* ---------- ROUTES ---------- */
 
 app.get("/api/sheet", (req, res) => {
   try {

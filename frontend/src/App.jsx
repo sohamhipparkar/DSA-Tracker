@@ -22,7 +22,6 @@ export default function App() {
 
         console.log("API RESPONSE:", res.data);
 
-        // SAFE extraction
         const questions = res?.data?.data?.questions || [];
 
         if (questions.length === 0) {
@@ -30,8 +29,6 @@ export default function App() {
           setLoading(false);
           return;
         }
-
-        // -------- GROUP QUESTIONS INTO TOPICS --------
 
         const topicMap = {};
 
@@ -62,7 +59,6 @@ export default function App() {
           });
         });
 
-        // convert to array
         const formattedTopics = Object.values(topicMap).map((topic) => ({
           ...topic,
           subtopics: Object.values(topic.subtopics),
@@ -81,7 +77,6 @@ export default function App() {
     loadSheet();
   }, []);
 
-  // ---------- LOADING SCREEN ----------
   if (loading) {
     return (
       <div className="h-screen flex items-center justify-center text-lg text-slate-500">
@@ -90,10 +85,9 @@ export default function App() {
     );
   }
 
-  // ---------- MAIN UI ----------
   return (
     <div className="max-w-5xl mx-auto px-6 py-10">
-      {/* Header with controls */}
+
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-4xl font-semibold tracking-tight">
           Strivers A2Z DSA Sheet

@@ -12,15 +12,12 @@ export default function AddTopic() {
 
   const addTopic = useSheetStore((s) => s.addTopic);
 
-  // autofocus when component loads
   useEffect(() => {
     inputRef.current?.focus();
   }, []);
 
   const handleAdd = () => {
     const clean = title.trim();
-
-    // validation
     if (!clean) {
       setError("Topic name can't be empty");
       return;
@@ -31,22 +28,17 @@ export default function AddTopic() {
       return;
     }
 
-    // add topic
     addTopic(clean);
 
-    // reset UI
     setTitle("");
     setError("");
     setSuccess(true);
 
-    // remove success message after 1.5s
     setTimeout(() => setSuccess(false), 1500);
 
-    // focus back
     inputRef.current?.focus();
   };
 
-  // handle enter key
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
       handleAdd();
@@ -58,13 +50,12 @@ export default function AddTopic() {
 return (
   <div className="mb-8">
 
-      {/* Label */}
       <label className="block mb-3 text-sm font-medium text-slate-700 dark:text-slate-300">
         Create a new study topic
       </label>
 
       <div className="flex gap-3">
-        {/* Input */}
+
         <input
           ref={inputRef}
           className={`flex-1 p-3 rounded-xl border transition
@@ -87,7 +78,6 @@ return (
           aria-label="Topic name"
         />
 
-        {/* Button */}
         <button
           onClick={handleAdd}
           disabled={!title.trim()}
@@ -102,14 +92,12 @@ return (
         </button>
       </div>
 
-      {/* Error message */}
       {error && (
         <p className="text-red-500 dark:text-red-400 text-sm mt-2 animate-pulse">
           {error}
         </p>
       )}
 
-      {/* Success message */}
       {success && (
         <p className="text-green-600 dark:text-green-400 text-sm mt-2">
           ✓ Topic added successfully!
