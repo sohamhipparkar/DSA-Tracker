@@ -1,43 +1,73 @@
 import { create } from "zustand";
 import { v4 as uuid } from "uuid";
 
-/* ---------------- LOAD SAVED DATA ---------------- */
+/* ---------- LOCAL STORAGE LOADERS ---------- */
 
 const loadTopics = () => {
-  const data = localStorage.getItem("sheet");
-  return data ? JSON.parse(data) : [];
+  try {
+    const data = localStorage.getItem("sheet");
+    return data ? JSON.parse(data) : [];
+  } catch {
+    return [];
+  }
 };
 
 const loadCompleted = () => {
-  const data = localStorage.getItem("completedQuestions");
-  return data ? JSON.parse(data) : [];
+  try {
+    const data = localStorage.getItem("completedQuestions");
+    return data ? JSON.parse(data) : [];
+  } catch {
+    return [];
+  }
 };
 
+/* ⭐ ADMIN MODE DEFAULT ON (FIRST VISIT) */
+const loadAdmin = () => {
+  const saved = localStorage.getItem("adminMode");
+
+  // First visit → automatically enable admin
+  if (saved === null) {
+    localStorage.setItem("adminMode", "true");
+    return true;
+  }
+
+  return saved === "true";
+};
+
+/* ---------- STORE ---------- */
+
 export const useSheetStore = create((set, get) => ({
-  /* ---------------- STATE ---------------- */
+  /* ===== STATE ===== */
 
   topics: loadTopics(),
   completed: loadCompleted(),
+  isAdmin: loadAdmin(),
 
-  /* ---------------- API LOAD ---------------- */
+  /* ===== ADMIN MODE ===== */
 
-  setTopicsFromAPI: (topicsData) =>
-    set(() => {
-      localStorage.setItem("sheet", JSON.stringify(topicsData));
-      return { topics: topicsData };
+  toggleAdminMode: () =>
+    set((state) => {
+      const newMode = !state.isAdmin;
+      localStorage.setItem("adminMode", newMode);
+      return { isAdmin: newMode };
     }),
 
-  /* ---------------- PROGRESS TRACKER ---------------- */
+  /* ===== HYDRATE FROM API ===== */
+
+  setTopicsFromAPI: (topicsData) => {
+    localStorage.setItem("sheet", JSON.stringify(topicsData));
+    set({ topics: topicsData });
+  },
+
+  /* ===== PROGRESS CHECKBOX ===== */
 
   toggleComplete: (qId) =>
     set((state) => {
       let updated;
 
       if (state.completed.includes(qId)) {
-        // uncheck
         updated = state.completed.filter((id) => id !== qId);
       } else {
-        // check
         updated = [...state.completed, qId];
       }
 
@@ -45,7 +75,7 @@ export const useSheetStore = create((set, get) => ({
       return { completed: updated };
     }),
 
-  /* ---------------- TOPIC ---------------- */
+  /* ===== TOPIC ===== */
 
   addTopic: (title) =>
     set((state) => {
@@ -69,20 +99,19 @@ export const useSheetStore = create((set, get) => ({
       return { topics: updated };
     }),
 
-  /* ----------- DRAG & DROP REORDER TOPICS ----------- */
+  /* ===== REORDER ===== */
 
   reorderTopics: (oldIndex, newIndex) =>
     set((state) => {
       const updated = [...state.topics];
-
-      const [movedItem] = updated.splice(oldIndex, 1);
-      updated.splice(newIndex, 0, movedItem);
+      const [moved] = updated.splice(oldIndex, 1);
+      updated.splice(newIndex, 0, moved);
 
       localStorage.setItem("sheet", JSON.stringify(updated));
       return { topics: updated };
     }),
 
-  /* ---------------- SUBTOPIC ---------------- */
+  /* ===== SUBTOPIC ===== */
 
   addSubtopic: (topicId, title) =>
     set((state) => {
@@ -117,7 +146,7 @@ export const useSheetStore = create((set, get) => ({
       return { topics: updated };
     }),
 
-  /* ---------------- QUESTION ---------------- */
+  /* ===== QUESTIONS ===== */
 
   addQuestion: (topicId, subId, title, link) =>
     set((state) => {
@@ -131,11 +160,7 @@ export const useSheetStore = create((set, get) => ({
                       ...sub,
                       questions: [
                         ...sub.questions,
-                        {
-                          id: uuid(),
-                          title,
-                          link,
-                        },
+                        { id: uuid(), title, link },
                       ],
                     }
                   : sub
@@ -169,34 +194,4 @@ export const useSheetStore = create((set, get) => ({
       localStorage.setItem("sheet", JSON.stringify(updated));
       return { topics: updated };
     }),
-
-  // -------- PROGRESS CALCULATION --------
-  getProgress: () => {
-    const { topics, completed } = get();
-
-    // Safety check: ensure topics is an array
-    if (!Array.isArray(topics)) {
-      return { total: 0, done: 0, percent: 0 };
-    }
-
-    let total = 0;
-
-    topics.forEach((topic) => {
-      // Safety check: ensure subtopics exists and is an array
-      if (Array.isArray(topic.subtopics)) {
-        topic.subtopics.forEach((sub) => {
-          // Safety check: ensure questions exists and is an array
-          if (Array.isArray(sub.questions)) {
-            total += sub.questions.length;
-          }
-        });
-      }
-    });
-
-    const done = completed.length;
-
-    const percent = total === 0 ? 0 : Math.round((done / total) * 100);
-
-    return { total, done, percent };
-  },
 }));

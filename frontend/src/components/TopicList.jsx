@@ -22,19 +22,14 @@ export default function TopicList({ search }) {
 
   // ===== OVERALL PROGRESS =====
   const { total, done, percent } = useMemo(() => {
-    // Safety check: ensure topics is an array
-    if (!Array.isArray(topics)) {
-      return { total: 0, done: 0, percent: 0 };
-    }
+    if (!Array.isArray(topics)) return { total: 0, done: 0, percent: 0 };
 
     let total = 0;
     let done = 0;
 
     topics.forEach((t) => {
-      // Safety check: ensure subtopics exists and is an array
       if (Array.isArray(t.subtopics)) {
         t.subtopics.forEach((s) => {
-          // Safety check: ensure questions exists and is an array
           if (Array.isArray(s.questions)) {
             s.questions.forEach((q) => {
               total++;
@@ -51,21 +46,14 @@ export default function TopicList({ search }) {
 
   // ===== CONTINUE WHERE LEFT OFF =====
   const nextQuestion = useMemo(() => {
-    // Safety check: ensure topics is an array
-    if (!Array.isArray(topics)) {
-      return null;
-    }
+    if (!Array.isArray(topics)) return null;
 
     for (const t of topics) {
-      // Safety check for subtopics
       if (Array.isArray(t.subtopics)) {
         for (const s of t.subtopics) {
-          // Safety check for questions
           if (Array.isArray(s.questions)) {
             for (const q of s.questions) {
-              if (!completed.includes(q.id)) {
-                return q;
-              }
+              if (!completed.includes(q.id)) return q;
             }
           }
         }
@@ -74,7 +62,7 @@ export default function TopicList({ search }) {
     return null;
   }, [topics, completed]);
 
-  // ===== FILTERED TOPICS (SEARCH) =====
+  // ===== FILTERED TOPICS =====
   const filteredTopics = Array.isArray(topics)
     ? topics.filter((topic) =>
         topic?.title?.toLowerCase().includes(search.toLowerCase())
@@ -86,15 +74,19 @@ export default function TopicList({ search }) {
 
       {/* GLOBAL PROGRESS SUMMARY */}
       {total > 0 && (
-        <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
+        <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-5 shadow-sm">
           <div className="flex justify-between items-center mb-3">
-            <h2 className="font-semibold text-lg">Your Sheet Progress</h2>
-            <span className="text-sm text-slate-600">
+            <h2 className="font-semibold text-lg text-slate-800 dark:text-slate-100">
+              Your Sheet Progress
+            </h2>
+
+            <span className="text-sm text-slate-600 dark:text-slate-400">
               {done} / {total} solved
             </span>
           </div>
 
-          <div className="w-full h-3 bg-slate-200 rounded-full overflow-hidden">
+          {/* progress bar */}
+          <div className="w-full h-3 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
             <div
               className={`h-3 rounded-full transition-all duration-700
               ${
@@ -110,7 +102,7 @@ export default function TopicList({ search }) {
             />
           </div>
 
-          <p className="text-sm text-slate-500 mt-2">
+          <p className="text-sm text-slate-500 dark:text-slate-400 mt-2">
             {percent === 100
               ? "Amazing! You completed the entire sheet 🎉"
               : `${percent}% completed`}
@@ -120,12 +112,12 @@ export default function TopicList({ search }) {
 
       {/* CONTINUE BUTTON */}
       {nextQuestion && (
-        <div className="bg-blue-50 border border-blue-200 rounded-2xl p-4 flex items-center justify-between">
+        <div className="bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-800 rounded-2xl p-4 flex items-center justify-between">
           <div>
-            <p className="text-sm text-blue-700 font-medium">
+            <p className="text-sm text-blue-700 dark:text-blue-300 font-medium">
               Continue solving
             </p>
-            <p className="text-xs text-blue-600">
+            <p className="text-xs text-blue-600 dark:text-blue-400">
               Next: {nextQuestion.title}
             </p>
           </div>
@@ -134,7 +126,7 @@ export default function TopicList({ search }) {
             href={nextQuestion.link}
             target="_blank"
             rel="noreferrer"
-            className="px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 text-sm font-medium"
+            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white rounded-xl text-sm font-medium transition"
           >
             Open Problem
           </a>
@@ -156,27 +148,27 @@ export default function TopicList({ search }) {
               ))
             ) : topics.length === 0 ? (
               /* EMPTY STATE */
-              <div className="text-center py-16 bg-slate-50 rounded-2xl border border-slate-200">
+              <div className="text-center py-16 bg-slate-50 dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700">
                 <div className="mb-4">
                   <span className="text-5xl">📚</span>
                 </div>
-                <p className="text-slate-800 text-lg font-medium mb-2">
+                <p className="text-slate-800 dark:text-slate-100 text-lg font-medium mb-2">
                   Start your DSA journey
                 </p>
-                <p className="text-slate-500 text-sm max-w-md mx-auto">
+                <p className="text-slate-500 dark:text-slate-400 text-sm max-w-md mx-auto">
                   Add a topic above (Arrays, Graphs, DP...) and begin tracking the problems you solve.
                 </p>
               </div>
             ) : (
               /* SEARCH EMPTY */
-              <div className="text-center py-16 bg-slate-50 rounded-2xl border border-slate-200">
+              <div className="text-center py-16 bg-slate-50 dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700">
                 <div className="mb-4">
                   <span className="text-4xl">🔍</span>
                 </div>
-                <p className="text-slate-800 font-medium mb-2">
+                <p className="text-slate-800 dark:text-slate-100 font-medium mb-2">
                   No matching topics
                 </p>
-                <p className="text-slate-500 text-sm">
+                <p className="text-slate-500 dark:text-slate-400 text-sm">
                   Try a different search term.
                 </p>
               </div>
