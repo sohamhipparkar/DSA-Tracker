@@ -6,9 +6,24 @@ require("dotenv").config();
 
 const app = express();
 
-// CORS Configuration
+// CORS Configuration - Allow multiple origins
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://dsa-tracker-nu-eight.vercel.app",
+  process.env.CORS_ORIGIN,
+].filter(Boolean);
+
 const corsOptions = {
-  origin: process.env.CORS_ORIGIN || "http://localhost:5173",
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps, Postman, or curl)
+    if (!origin) return callback(null, true);
+
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error(`Origin ${origin} not allowed by CORS`));
+    }
+  },
   credentials: true,
   optionsSuccessStatus: 200,
 };
