@@ -6,6 +6,7 @@ import TopicList from "./components/TopicList";
 import DarkModeToggle from "./components/DarkModeToggle";
 import AdminToggle from "./components/AdminToggle";
 import TutorialModal from "./components/Tutorial";
+import { Analytics } from "@vercel/analytics/react"
 
 export default function App() {
   const setTopicsFromAPI = useSheetStore((s) => s.setTopicsFromAPI);
@@ -119,6 +120,7 @@ export default function App() {
       <TopicList search={search} />
       <>
         <TutorialModal />
+        <Analytics />
       </>
     </div>
   );
