@@ -9,6 +9,7 @@ const app = express();
 const allowedOrigins = [
   "http://localhost:5173",
   "https://dsa-tracker-nu-eight.vercel.app",
+  "soham-dsa-tracker.vercel.app",
   process.env.CORS_ORIGIN,
 ].filter(Boolean);
 
