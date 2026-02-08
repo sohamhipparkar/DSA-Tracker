@@ -2,13 +2,22 @@ const express = require("express");
 const cors = require("cors");
 const fs = require("fs");
 const path = require("path");
+require("dotenv").config();
 
 const app = express();
 
-app.use(cors());
+// CORS Configuration
+const corsOptions = {
+  origin: process.env.CORS_ORIGIN || "http://localhost:5173",
+  credentials: true,
+  optionsSuccessStatus: 200,
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 
 const FILE = "./data.json";
+const PORT = process.env.PORT || 5000;
 
 /* ---------- safe read ---------- */
 const readData = () => {
@@ -35,7 +44,6 @@ const writeData = (data) => {
 };
 
 /* ---------- ROUTES ---------- */
-
 
 app.get("/api/sheet", (req, res) => {
   try {
@@ -83,6 +91,6 @@ app.put("/api/topic/:id", (req, res) => {
   res.json({ message: "updated" });
 });
 
-app.listen(5000, () =>
-  console.log("✅ API running → http://localhost:5000/api/sheet")
+app.listen(PORT, () =>
+  console.log(`✅ API running → http://localhost:${PORT}/api/sheet`)
 );
